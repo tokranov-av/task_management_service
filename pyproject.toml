@@ -10,3 +10,8 @@ dependencies = [
     "fastapi[all]>=0.120.1",
     "sqlalchemy[asyncio]>=2.0.44",
 ]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+]
