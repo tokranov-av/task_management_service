@@ -65,11 +65,6 @@ class PostgresConfig(BaseModel):
     }
 
 
-class TelegramBotConfig(BaseModel):
-    token: str = ""
-    admin_id: int = 0
-
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
