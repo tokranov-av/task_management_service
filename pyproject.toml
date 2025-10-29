@@ -146,6 +146,6 @@ unfixable = []
 "management-service/testing/**.py" = [
     "S311", # S311 Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
-"alembic/**" = [
+"management-service/alembic/**" = [
     "INP001"
 ]
