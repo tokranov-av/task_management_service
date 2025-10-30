@@ -3,6 +3,7 @@ __all__ = (
     "TaskCreate",
     "TaskRead",
     "TaskUpdate",
+    "TaskUpdatePartial",
 )
 
 from .task import (
@@ -10,4 +11,5 @@ from .task import (
     TaskCreate,
     TaskRead,
     TaskUpdate,
+    TaskUpdatePartial,
 )
