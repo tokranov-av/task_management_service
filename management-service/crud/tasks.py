@@ -9,7 +9,7 @@ from core.schemas import (
 )
 
 
-async def get_tasks(session: AsyncSession) -> list[Task]:
+async def get_all_tasks(session: AsyncSession) -> list[Task]:
     """Возвращает задачи."""
     stmt = select(Task).order_by(Task.id)
     result: Result[tuple[Task]] = await session.execute(stmt)
@@ -41,7 +41,7 @@ async def update_task(
     task: Task,
     task_update: TaskUpdate | TaskUpdatePartial,
     partial: bool = False,  # noqa: FBT001, FBT002
-) -> Task | None:
+) -> Task:
     """Выполняет обновление задачи."""
     for field_name, value in task_update.model_dump(exclude_unset=partial).items():
         setattr(task, field_name, value)
@@ -51,8 +51,8 @@ async def update_task(
 
 
 async def delete_task(
-    task: Task,
     session: AsyncSession,
+    task: Task,
 ) -> None:
     """Удаляет задачу."""
     await session.delete(task)

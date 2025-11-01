@@ -20,9 +20,6 @@ class TaskBase(BaseModel):
     title: Annotated[str, MaxLen(255)]
     description: str | None = None
     priority: TaskPriority = TaskPriority.MEDIUM
-    status: TaskStatus = TaskStatus.NEW
-    result: str | None = None
-    error_info: str | None = None
 
 
 class TaskCreate(TaskBase):
@@ -31,6 +28,10 @@ class TaskCreate(TaskBase):
 
 class TaskUpdate(TaskBase):
     """Схема для обновления задачи."""
+
+    status: TaskStatus = TaskStatus.NEW
+    result: str | None = None
+    error_info: str | None = None
 
 
 class TaskUpdatePartial(BaseModel):
@@ -56,6 +57,16 @@ class TaskRead(TaskBase):
     )
 
     id: int
+    status: TaskStatus = TaskStatus.NEW
+    result: str | None
+    error_info: str | None
     created_at: datetime
-    started_at: datetime | None = None
-    completed_at: datetime | None = None
+    started_at: datetime | None
+    completed_at: datetime | None
+
+
+class TaskStatusRead(BaseModel):
+    """Схема для чтения задачи."""
+
+    id: int
+    status: TaskStatus

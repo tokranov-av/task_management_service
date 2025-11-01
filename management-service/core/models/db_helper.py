@@ -1,6 +1,7 @@
 __all__ = ("db_helper",)
 
 import logging
+from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -36,6 +37,16 @@ class DatabaseHelper:
             autocommit=False,
             expire_on_commit=False,
         )
+
+    async def get_session(self) -> AsyncGenerator[AsyncSession]:
+        async with self.session_factory() as session:
+            try:
+                yield session
+            except Exception:
+                await session.rollback()
+                raise
+            finally:
+                await session.close()
 
     async def dispose(self) -> None:
         await self.engine.dispose()
