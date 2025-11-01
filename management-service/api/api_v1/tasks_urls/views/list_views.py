@@ -12,6 +12,7 @@ from core.schemas import (
     TaskCreate,
     TaskRead,
 )
+from core.schemas.task import TaskFilterParams, TaskPaginationParams
 from crud import tasks as crud_tasks
 
 router = APIRouter(
@@ -23,14 +24,15 @@ router = APIRouter(
 @router.get(
     path="/",
 )
-async def get_list_of_tasks(
-    session: Annotated[
-        AsyncSession,
-        Depends(db_helper.get_session),
-    ],
+async def get_tasks(
+    session: Annotated[AsyncSession, Depends(db_helper.get_session)],
+    filter_params: Annotated[TaskFilterParams, Depends()],
+    pagination: Annotated[TaskPaginationParams, Depends()],
 ) -> list[TaskRead]:
-    tasks = await crud_tasks.get_all_tasks(
+    tasks = await crud_tasks.get_tasks(
         session=session,
+        filter_params=filter_params,
+        pagination=pagination,
     )
 
     return [TaskRead.model_validate(task) for task in tasks]

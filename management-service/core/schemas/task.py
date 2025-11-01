@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated
 
 from annotated_types import MaxLen
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from core.enums import (
     TaskPriority,
@@ -70,3 +70,18 @@ class TaskStatusRead(BaseModel):
 
     id: int
     status: TaskStatus
+
+
+class TaskFilterParams(BaseModel):
+    """Параметры фильтрации задач."""
+
+    status: TaskStatus | None = None
+    priority: TaskPriority | None = None
+    search: str | None = None
+
+
+class TaskPaginationParams(BaseModel):
+    """Параметры пагинации задач."""
+
+    limit: int = Field(default=20, ge=1, le=100)
+    offset: int = Field(default=0, ge=0)
