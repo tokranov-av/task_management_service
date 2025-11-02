@@ -891,6 +891,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "black" },
+    { name = "httpx" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -908,6 +909,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "black", specifier = ">=25.9.0" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-asyncio", specifier = ">=1.2.0" },
