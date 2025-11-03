@@ -7,6 +7,7 @@ from fastapi import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.decorators import handle_errors
 from core.models import db_helper
 from core.schemas import (
     TaskCreate,
@@ -24,6 +25,7 @@ router = APIRouter(
 @router.get(
     path="/",
 )
+@handle_errors
 async def get_tasks(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
     filter_params: Annotated[TaskFilterParams, Depends()],
@@ -42,6 +44,7 @@ async def get_tasks(
     path="/",
     status_code=status.HTTP_201_CREATED,
 )
+@handle_errors
 async def create_task(
     session: Annotated[
         AsyncSession,

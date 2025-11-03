@@ -10,6 +10,7 @@ from fastapi import (
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.api_v1.tasks_urls import prefetch_task
+from api.decorators import handle_errors
 from core.models import Task, db_helper
 from core.schemas import (
     TaskRead,
@@ -42,6 +43,7 @@ TaskById = Annotated[
 @router.get(
     path="/",
 )
+@handle_errors
 async def read_task(
     task: TaskById,
 ) -> TaskRead:
@@ -52,6 +54,7 @@ async def read_task(
     path="/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
+@handle_errors
 async def delete_task(
     session: Annotated[
         AsyncSession,
@@ -68,6 +71,7 @@ async def delete_task(
 @router.get(
     path="/status",
 )
+@handle_errors
 async def get_task_status(
     task: TaskById,
 ) -> TaskStatusRead:
