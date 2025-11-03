@@ -5,7 +5,10 @@ __all__ = (
 
 import logging
 from pathlib import Path
-from typing import Literal
+from typing import (
+    Any,
+    Literal,
+)
 
 from pydantic import BaseModel
 from pydantic_settings import (
@@ -36,6 +39,48 @@ class LoggingConfig(BaseModel):
     @property
     def log_level(self) -> int:
         return logging.getLevelNamesMapping()[self.log_level_name]
+
+    @property
+    def dict_config(self) -> dict[str, Any]:
+        """Возвращает конфигурацию для dictConfig"""
+        return {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "default": {
+                    "format": self.log_format,
+                    "datefmt": self.date_format,
+                },
+            },
+            "handlers": {
+                "default": {
+                    "formatter": "default",
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stderr",
+                },
+            },
+            "loggers": {
+                "": {
+                    "handlers": ["default"],
+                    "level": self.log_level,
+                },
+                "uvicorn": {
+                    "handlers": ["default"],
+                    "level": self.log_level,
+                    "propagate": False,
+                },
+                "uvicorn.error": {
+                    "handlers": ["default"],
+                    "level": self.log_level,
+                    "propagate": False,
+                },
+                "uvicorn.access": {
+                    "handlers": ["default"],
+                    "level": self.log_level,
+                    "propagate": False,
+                },
+            },
+        }
 
 
 class PostgresConfig(BaseModel):
