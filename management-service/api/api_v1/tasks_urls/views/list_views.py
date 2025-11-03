@@ -19,6 +19,28 @@ from crud import tasks as crud_tasks
 router = APIRouter(
     prefix="/tasks",
     tags=["Tasks"],
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Task not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Task with 'task_id' not found",
+                    },
+                },
+            },
+        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Database error occurred",
+                    },
+                },
+            },
+        },
+    },
 )
 
 

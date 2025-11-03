@@ -31,6 +31,16 @@ router = APIRouter(
                 },
             },
         },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Database error occurred",
+                    },
+                },
+            },
+        },
     },
 )
 
