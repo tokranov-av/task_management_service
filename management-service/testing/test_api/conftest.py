@@ -1,22 +1,14 @@
-from collections.abc import Generator
+from collections.abc import AsyncGenerator
 
-import pytest
-from fastapi.testclient import TestClient
+import pytest_asyncio
+from httpx import ASGITransport, AsyncClient
 
-# from core.schemas import TaskRead
-from main import app
-
-# from testing.utils import create_movie_random_slug
+from main import app as fastapi_app
 
 
-@pytest.fixture
-def client() -> Generator[TestClient]:
-    with TestClient(app=app) as client:
-        yield client
-
-
-# @pytest.fixture
-# def task() -> Generator[TaskRead]:
-#     movie = create_movie_random_slug()
-#     yield movie
-#     storage.delete(movie)
+@pytest_asyncio.fixture(scope="function")
+async def client() -> AsyncGenerator[AsyncClient]:
+    async with AsyncClient(
+        transport=ASGITransport(app=fastapi_app), base_url="http://test",
+    ) as ac:
+        yield ac
