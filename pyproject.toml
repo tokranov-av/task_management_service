@@ -152,3 +152,17 @@ unfixable = []
 "management-service/alembic/**" = [
     "INP001"
 ]
+
+# pytest settings
+
+[tool.pytest.ini_options]
+minversion = "8.4.1"
+addopts = "-ra --strict-markers"
+log_cli = false
+log_cli_level = "INFO"
+console_output_style = "progress"
+xfail_strict = true
+
+markers = [
+    "apitest: test any http api call",
+]
