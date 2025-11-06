@@ -2,7 +2,9 @@ __all__ = ("db_helper",)
 
 import logging
 from collections.abc import AsyncGenerator
+from typing import Any
 
+from sqlalchemy import Pool
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -16,21 +18,32 @@ log = logging.getLogger(__name__)
 
 
 class DatabaseHelper:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         url: str,
         echo: bool = False,  # noqa: FBT001, FBT002
         echo_pool: bool = False,  # noqa: FBT001, FBT002
-        pool_size: int = 5,
-        max_overflow: int = 10,
+        pool_size: int | None = None,
+        max_overflow: int | None = None,
+        poolclass: type[Pool] | None = None,
     ) -> None:
-        self.engine: AsyncEngine = create_async_engine(
-            url=url,
-            echo=echo,
-            echo_pool=echo_pool,
-            pool_size=pool_size,
-            max_overflow=max_overflow,
-        )
+        engine_kwargs: dict[str, Any] = {
+            "url": url,
+            "echo": echo,
+            "echo_pool": echo_pool,
+        }
+
+        if poolclass is not None:
+            engine_kwargs["poolclass"] = poolclass
+
+        if poolclass is None or poolclass.__name__ != "NullPool":
+            if pool_size is not None:
+                engine_kwargs["pool_size"] = pool_size
+            if max_overflow is not None:
+                engine_kwargs["max_overflow"] = max_overflow
+
+        self.engine: AsyncEngine = create_async_engine(**engine_kwargs)
+
         self.session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
             bind=self.engine,
             autoflush=False,
@@ -55,8 +68,5 @@ class DatabaseHelper:
 
 db_helper = DatabaseHelper(
     url=settings.postgres.url,
-    echo=settings.postgres.echo,
-    echo_pool=settings.postgres.echo_pool,
-    pool_size=settings.postgres.pool_size,
-    max_overflow=settings.postgres.max_overflow,
+    **settings.postgres.get_database_params,
 )

@@ -4,6 +4,7 @@ __all__ = (
 )
 
 import logging
+import os
 from pathlib import Path
 from typing import (
     Any,
@@ -17,6 +18,7 @@ from pydantic_settings import (
     SettingsConfigDict,
     YamlConfigSettingsSource,
 )
+from sqlalchemy import NullPool
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -94,12 +96,40 @@ class PostgresConfig(BaseModel):
     pool_size: int = 50
     max_overflow: int = 10
 
+    test_host: str = "localhost"
+    test_port: int = 5432
+    test_db: str = "postgres"
+    test_user: str = "postgres"
+    test_password: str = ""
+
     @property
     def url(self) -> str:
-        user = f"{self.user}:{self.password}"
-        database = f"{self.host}:{self.port}/{self.db}"
+        if os.getenv("TESTING") == "TRUE":
+            user = f"{self.test_user}:{self.test_password}"
+            database = f"{self.test_host}:{self.test_port}/{self.test_db}"
+        else:
+            user = f"{self.user}:{self.password}"
+            database = f"{self.host}:{self.port}/{self.db}"
 
         return f"postgresql+asyncpg://{user}@{database}"
+
+    @property
+    def get_database_params(self) -> dict[str, Any]:
+        """Возвращает конфигурацию для DatabaseHelper"""
+        db_params: dict[str, Any] = {
+            "echo": self.echo,
+            "echo_pool": self.echo_pool,
+        }
+
+        if os.getenv("TESTING") == "TRUE":
+            db_params["poolclass"] = NullPool
+        else:
+            db_params = db_params | {
+                "pool_size": self.pool_size,
+                "max_overflow": self.max_overflow,
+            }
+
+        return db_params
 
     naming_convention: dict[str, str] = {
         "ix": "ix_%(column_0_label)s",
@@ -153,6 +183,7 @@ class Settings(BaseSettings):
 
     logging: LoggingConfig = LoggingConfig()
     postgres: PostgresConfig = PostgresConfig()
+    mode: Literal["TEST", "DEV", "PROD"] = "DEV"
 
 
 settings = Settings()
