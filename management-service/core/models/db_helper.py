@@ -4,7 +4,10 @@ import logging
 from collections.abc import AsyncGenerator
 from typing import Any
 
-from sqlalchemy import Pool
+from sqlalchemy import (
+    NullPool,
+    Pool,
+)
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -36,7 +39,7 @@ class DatabaseHelper:
         if poolclass is not None:
             engine_kwargs["poolclass"] = poolclass
 
-        if poolclass is None or poolclass.__name__ != "NullPool":
+        if poolclass is None or not issubclass(poolclass, NullPool):
             if pool_size is not None:
                 engine_kwargs["pool_size"] = pool_size
             if max_overflow is not None:
