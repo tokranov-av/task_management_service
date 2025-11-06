@@ -1,0 +1,10 @@
+management-service:
+  logging:
+    log_level_name: INFO
+
+  postgres:
+    host: localhost
+    db: management_test_db
+    user: test_user
+    password: test_password
+    port: 5432

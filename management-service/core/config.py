@@ -96,20 +96,10 @@ class PostgresConfig(BaseModel):
     pool_size: int = 50
     max_overflow: int = 10
 
-    test_host: str = "localhost"
-    test_port: int = 5432
-    test_db: str = "postgres"
-    test_user: str = "postgres"
-    test_password: str = ""
-
     @property
     def url(self) -> str:
-        if os.getenv("TESTING") == "TRUE":
-            user = f"{self.test_user}:{self.test_password}"
-            database = f"{self.test_host}:{self.test_port}/{self.test_db}"
-        else:
-            user = f"{self.user}:{self.password}"
-            database = f"{self.host}:{self.port}/{self.db}"
+        user = f"{self.user}:{self.password}"
+        database = f"{self.host}:{self.port}/{self.db}"
 
         return f"postgresql+asyncpg://{user}@{database}"
 
@@ -145,7 +135,11 @@ class Settings(BaseSettings):
         case_sensitive=False,
         yaml_file=(
             BASE_DIR / "config.default.yaml",
-            BASE_DIR / "config.custom.yaml",
+            (
+                BASE_DIR / "config.custom.test.yaml"
+                if os.getenv("TESTING") == "TRUE"
+                else BASE_DIR / "config.custom.yaml"
+            ),
         ),
         yaml_config_section="management-service",
     )
@@ -183,7 +177,6 @@ class Settings(BaseSettings):
 
     logging: LoggingConfig = LoggingConfig()
     postgres: PostgresConfig = PostgresConfig()
-    mode: Literal["TEST", "DEV", "PROD"] = "DEV"
 
 
 settings = Settings()
