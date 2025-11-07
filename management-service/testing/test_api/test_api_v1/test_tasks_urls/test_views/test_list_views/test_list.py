@@ -93,3 +93,35 @@ async def test_filters(
     task = data[0]
     for key, value in expected_data.items():
         assert task[key] == value
+
+
+@pytest.mark.apitest
+async def test_search(
+    client: AsyncClient,
+) -> None:
+    url = app.url_path_for("get_tasks")
+
+    response = await client.get(url=url, params={"search": "Задача 3"})
+
+    assert response.status_code == status.HTTP_200_OK, response.text
+    data = response.json()
+    assert len(data) == 1
+    task = data[0]
+    assert task["id"] == TASK_THREE_ID
+    assert task["title"] == "Задача 3"
+
+
+@pytest.mark.apitest
+async def test_pagination(
+    client: AsyncClient,
+) -> None:
+    url = app.url_path_for("get_tasks")
+
+    response = await client.get(url=url, params={"limit": 1, "offset": 1})
+
+    assert response.status_code == status.HTTP_200_OK, response.text
+    data = response.json()
+    assert len(data) == 1
+    task = data[0]
+    assert task["id"] == TASK_TWO_ID
+    assert task["title"] == "Задача 2"
