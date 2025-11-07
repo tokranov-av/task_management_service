@@ -2,11 +2,20 @@
 __all__ = ("handle_errors",)
 
 import logging
-from collections.abc import Awaitable, Callable
+from collections.abc import (
+    Awaitable,
+    Callable,
+)
 from functools import wraps
-from typing import ParamSpec, TypeVar
+from typing import (
+    ParamSpec,
+    TypeVar,
+)
 
-from fastapi import HTTPException, status
+from fastapi import (
+    HTTPException,
+    status,
+)
 from sqlalchemy.exc import SQLAlchemyError
 
 log = logging.getLogger(__name__)

@@ -13,7 +13,10 @@ from core.schemas import (
     TaskCreate,
     TaskRead,
 )
-from core.schemas.task import TaskFilterParams, TaskPaginationParams
+from core.schemas.task import (
+    TaskFilterParams,
+    TaskPaginationParams,
+)
 from crud import tasks as crud_tasks
 
 router = APIRouter(

@@ -2,9 +2,7 @@ import asyncio
 import json
 import os
 from asyncio import AbstractEventLoop
-from collections.abc import (
-    Generator,
-)
+from collections.abc import Generator
 from datetime import datetime
 
 import pytest

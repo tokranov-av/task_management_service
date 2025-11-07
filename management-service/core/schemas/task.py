@@ -2,7 +2,11 @@ from datetime import datetime
 from typing import Annotated
 
 from annotated_types import MaxLen
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+)
 
 from core.enums import (
     TaskPriority,

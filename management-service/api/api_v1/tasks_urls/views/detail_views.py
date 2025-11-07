@@ -11,7 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.api_v1.tasks_urls import prefetch_task
 from api.decorators import handle_errors
-from core.models import Task, db_helper
+from core.models import (
+    Task,
+    db_helper,
+)
 from core.schemas import (
     TaskRead,
 )

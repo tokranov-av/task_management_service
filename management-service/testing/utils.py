@@ -8,7 +8,10 @@ import random
 import string
 
 from core.enums import TaskPriority
-from core.models import Task, db_helper
+from core.models import (
+    Task,
+    db_helper,
+)
 from core.schemas import TaskCreate
 
 
