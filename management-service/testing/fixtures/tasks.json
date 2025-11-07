@@ -1,0 +1,32 @@
+[
+    {
+        "title": "Задача 1",
+        "description": "Описание задачи 1",
+        "priority": "MEDIUM",
+        "status": "COMPLETED",
+        "started_at": "2025-11-07 03:30:30",
+        "completed_at": "2025-11-07 03:35:30",
+        "result": "Успешно выполнена",
+        "error_info": null
+    },
+        {
+        "title": "Задача 2",
+        "description": "Описание задачи 2",
+        "priority": "LOW",
+        "status": "IN_PROGRESS",
+        "started_at": "2025-11-07 05:50:50",
+        "completed_at": null,
+        "result": null,
+        "error_info": null
+    },
+      {
+        "title": "Задача 3",
+        "description": "Описание задачи 3",
+        "priority": "HIGH",
+        "status": "NEW",
+        "started_at": null,
+        "completed_at": null,
+        "result": null,
+        "error_info": null
+    }
+]

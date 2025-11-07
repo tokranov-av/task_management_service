@@ -1,4 +1,9 @@
-from sqlalchemy import Result, and_, or_, select
+from sqlalchemy import (
+    Result,
+    and_,
+    or_,
+    select,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Task
@@ -7,7 +12,10 @@ from core.schemas import (
     TaskUpdate,
     TaskUpdatePartial,
 )
-from core.schemas.task import TaskFilterParams, TaskPaginationParams
+from core.schemas.task import (
+    TaskFilterParams,
+    TaskPaginationParams,
+)
 
 
 async def get_all_tasks(session: AsyncSession) -> list[Task]:
