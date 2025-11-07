@@ -53,6 +53,6 @@ async def prepare_database() -> None:
             )
 
     async with db_helper.session_factory() as session:
-        add_hotels = insert(Task).values(tasks)
-        await session.execute(add_hotels)
+        add_tasks = insert(Task).values(tasks)
+        await session.execute(add_tasks)
         await session.commit()
