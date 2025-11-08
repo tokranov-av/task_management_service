@@ -145,7 +145,7 @@ class Settings(BaseSettings):
         yaml_file=(
             BASE_DIR / "config.default.yaml",
             (
-                BASE_DIR / "config.custom.test.yaml"
+                BASE_DIR / "config.testing.yaml"
                 if os.getenv("TESTING") == "TRUE"
                 else BASE_DIR / "config.custom.yaml"
             ),
