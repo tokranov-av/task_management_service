@@ -78,7 +78,7 @@ async def test_get_tasks(client: AsyncClient) -> None:
         ),
     ],
 )
-async def test_filters(
+async def test_get_tasks_filters(
     client: AsyncClient,
     query_params: dict[str, str],
     expected_data: dict[str, str],

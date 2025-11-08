@@ -18,9 +18,36 @@ from core.schemas.task import (
 )
 
 
-async def get_all_tasks(session: AsyncSession) -> list[Task]:
-    """Возвращает задачи."""
-    stmt = select(Task).order_by(Task.id)
+async def get_tasks(
+    session: AsyncSession,
+    filter_params: TaskFilterParams | None = None,
+    pagination: TaskPaginationParams | None = None,
+) -> list[Task]:
+    stmt = select(Task)
+
+    if filter_params:
+        conditions = []
+
+        if filter_params.status:
+            conditions.append(Task.status == filter_params.status)
+        if filter_params.priority:
+            conditions.append(Task.priority == filter_params.priority)
+        if filter_params.search:
+            conditions.append(
+                or_(
+                    Task.title.ilike(f"%{filter_params.search}%"),
+                    Task.description.ilike(f"%{filter_params.search}%"),
+                ),
+            )
+
+        if conditions:
+            stmt = stmt.where(and_(*conditions))
+
+    stmt = stmt.order_by(Task.id)
+
+    if pagination:
+        stmt = stmt.limit(pagination.limit).offset(pagination.offset)
+
     result: Result[tuple[Task]] = await session.execute(stmt)
     tasks = result.scalars().all()
 
@@ -66,39 +93,3 @@ async def delete_task(
     """Удаляет задачу."""
     await session.delete(task)
     await session.commit()
-
-
-async def get_tasks(
-    session: AsyncSession,
-    filter_params: TaskFilterParams | None = None,
-    pagination: TaskPaginationParams | None = None,
-) -> list[Task]:
-    stmt = select(Task)
-
-    if filter_params:
-        conditions = []
-
-        if filter_params.status:
-            conditions.append(Task.status == filter_params.status)
-        if filter_params.priority:
-            conditions.append(Task.priority == filter_params.priority)
-        if filter_params.search:
-            conditions.append(
-                or_(
-                    Task.title.ilike(f"%{filter_params.search}%"),
-                    Task.description.ilike(f"%{filter_params.search}%"),
-                ),
-            )
-
-        if conditions:
-            stmt = stmt.where(and_(*conditions))
-
-    stmt = stmt.order_by(Task.id)
-
-    if pagination:
-        stmt = stmt.limit(pagination.limit).offset(pagination.offset)
-
-    result: Result[tuple[Task]] = await session.execute(stmt)
-    tasks = result.scalars().all()
-
-    return list(tasks)
