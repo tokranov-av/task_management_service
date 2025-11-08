@@ -2,7 +2,6 @@ import asyncio
 import json
 from asyncio import AbstractEventLoop
 from collections.abc import Generator
-from datetime import datetime
 
 import pytest
 from sqlalchemy import insert
@@ -16,6 +15,7 @@ from core.models import (
     Task,
     db_helper,
 )
+from core.schemas import TaskFixture
 
 if not IS_TESTING:
     pytest.exit("Environment is not ready for testing.")
@@ -41,21 +41,11 @@ async def prepare_database() -> None:
     fixture_path = BASE_DIR / "testing" / "fixtures" / "tasks.json"
 
     with fixture_path.open(encoding="utf-8") as file:
-        tasks = json.load(file)
-
-    for task in tasks:
-        if task["started_at"] is not None:
-            task["started_at"] = datetime.strptime(  # noqa: DTZ007
-                task["started_at"],
-                "%Y-%m-%d %H:%M:%S",
-            )
-        if task["completed_at"] is not None:
-            task["completed_at"] = datetime.strptime(  # noqa: DTZ007
-                task["completed_at"],
-                "%Y-%m-%d %H:%M:%S",
-            )
+        tasks = [TaskFixture.model_validate(task) for task in json.load(file)]
 
     async with db_helper.session_factory() as session:
-        add_tasks = insert(Task).values(tasks)
+        add_tasks = insert(Task).values(
+            [task.model_dump(exclude_unset=True) for task in tasks],
+        )
         await session.execute(add_tasks)
         await session.commit()

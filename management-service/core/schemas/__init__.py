@@ -1,6 +1,7 @@
 __all__ = (
     "TaskBase",
     "TaskCreate",
+    "TaskFixture",
     "TaskRead",
     "TaskUpdate",
     "TaskUpdatePartial",
@@ -9,6 +10,7 @@ __all__ = (
 from .task import (
     TaskBase,
     TaskCreate,
+    TaskFixture,
     TaskRead,
     TaskUpdate,
     TaskUpdatePartial,

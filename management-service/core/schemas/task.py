@@ -89,3 +89,17 @@ class TaskPaginationParams(BaseModel):
 
     limit: int = Field(default=20, ge=1, le=100)
     offset: int = Field(default=0, ge=0)
+
+
+class TaskFixture(TaskBase):
+    """Схема для парсинга фикстур."""
+
+    model_config = ConfigDict(
+        from_attributes=True,
+    )
+
+    status: TaskStatus = TaskStatus.NEW
+    result: str | None
+    error_info: str | None
+    started_at: datetime | None
+    completed_at: datetime | None
