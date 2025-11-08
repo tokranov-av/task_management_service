@@ -8,9 +8,3 @@ management-service:
     user: postgres
     password: ""
     port: 5432
-
-    test_host: localhost
-    test_db: test_postgres
-    test_user: test_user
-    test_password: test_password
-    test_port: 5432
