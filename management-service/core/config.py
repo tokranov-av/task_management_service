@@ -130,6 +130,15 @@ class PostgresConfig(BaseModel):
     }
 
 
+class ApiV1Prefix(BaseModel):
+    prefix: str = "/v1"
+
+
+class ApiPrefix(BaseModel):
+    prefix: str = "/api"
+    v1: ApiV1Prefix = ApiV1Prefix()
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -177,6 +186,7 @@ class Settings(BaseSettings):
 
     logging: LoggingConfig = LoggingConfig()
     postgres: PostgresConfig = PostgresConfig()
+    api: ApiPrefix = ApiPrefix()
 
 
 settings = Settings()
