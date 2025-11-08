@@ -1,6 +1,5 @@
 import asyncio
 import json
-import os
 from asyncio import AbstractEventLoop
 from collections.abc import Generator
 from datetime import datetime
@@ -8,14 +7,17 @@ from datetime import datetime
 import pytest
 from sqlalchemy import insert
 
-from core.config import BASE_DIR
+from core.config import (
+    BASE_DIR,
+    IS_TESTING,
+)
 from core.models import (
     Base,
     Task,
     db_helper,
 )
 
-if os.getenv("TESTING") != "TRUE":
+if not IS_TESTING:
     pytest.exit("Environment is not ready for testing.")
 
 
@@ -30,7 +32,7 @@ def event_loop() -> Generator[AbstractEventLoop]:
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database() -> None:
     """Подготовка базы данных для тестов."""
-    assert os.getenv("TESTING") == "TRUE"
+    assert IS_TESTING
 
     async with db_helper.engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

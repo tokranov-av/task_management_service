@@ -1,5 +1,6 @@
 __all__ = (
     "BASE_DIR",
+    "IS_TESTING",
     "settings",
 )
 
@@ -21,6 +22,8 @@ from pydantic_settings import (
 from sqlalchemy import NullPool
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+IS_TESTING = os.getenv("TESTING", "").upper() == "TRUE"
 
 LOG_FORMAT: str = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
@@ -111,7 +114,7 @@ class PostgresConfig(BaseModel):
             "echo_pool": self.echo_pool,
         }
 
-        if os.getenv("TESTING") == "TRUE":
+        if IS_TESTING:
             db_params["poolclass"] = NullPool
         else:
             db_params = db_params | {
@@ -139,17 +142,18 @@ class ApiPrefix(BaseModel):
     v1: ApiV1Prefix = ApiV1Prefix()
 
 
+yaml_configs = [
+    BASE_DIR / "config.default.yaml",
+    BASE_DIR / "config.custom.yaml",
+]
+if IS_TESTING:
+    yaml_configs.append(BASE_DIR / "config.testing.yaml")
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
-        yaml_file=(
-            BASE_DIR / "config.default.yaml",
-            (
-                BASE_DIR / "config.testing.yaml"
-                if os.getenv("TESTING") == "TRUE"
-                else BASE_DIR / "config.custom.yaml"
-            ),
-        ),
+        yaml_file=tuple(yaml_configs),
         yaml_config_section="management-service",
     )
 
