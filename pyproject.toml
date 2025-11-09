@@ -5,6 +5,7 @@ description = "Сервис управления задачами"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aio-pika>=9.5.7",
     "alembic>=1.17.0",
     "asyncpg>=0.30.0",
     "fastapi[all]>=0.120.1",
