@@ -9,5 +9,18 @@ services:
     ports:
       - "5432:5432"
 
+  rabbitmq:
+    image: rabbitmq:4.2.0-management-alpine
+    hostname: task_service_rmq
+    container_name: task_service_rmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./management-service/.env
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
 volumes:
   pg_data:
+  rabbitmq-data:

@@ -133,6 +133,19 @@ class PostgresConfig(BaseModel):
     }
 
 
+class RabbitMQConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 5672
+    user: str = "guest"
+    password: str = ""
+    queue_name: str = "task_queue"
+    exchange_name: str = "task_exchange"
+
+    @property
+    def url(self) -> str:
+        return f"amqp://{self.user}:{self.password}@{self.host}:{self.port}/"
+
+
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
 
@@ -191,6 +204,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     postgres: PostgresConfig = PostgresConfig()
     api: ApiPrefix = ApiPrefix()
+    rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
 
 settings = Settings()

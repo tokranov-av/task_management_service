@@ -4,7 +4,15 @@ management-service:
 
   postgres:
     host: localhost
+    port: 5432
     db: postgres
     user: postgres
     password: ""
-    port: 5432
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    user: guest
+    password: guest
+    queue_name: task_queue
+    exchange_name: task_exchange
