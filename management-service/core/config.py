@@ -144,7 +144,7 @@ class ApiPrefix(BaseModel):
 
 yaml_configs = [
     BASE_DIR / "config.default.yaml",
-    BASE_DIR / "config.custom.yaml",
+    BASE_DIR / "config.local.yaml",
 ]
 if IS_TESTING:
     yaml_configs.append(BASE_DIR / "config.testing.yaml")
