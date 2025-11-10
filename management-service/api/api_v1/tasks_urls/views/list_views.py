@@ -18,6 +18,7 @@ from core.schemas.task import (
     TaskPaginationParams,
 )
 from crud import tasks as crud_tasks
+from services import rabbitmq_service
 
 router = APIRouter(
     prefix="/tasks",
@@ -81,5 +82,15 @@ async def create_task(
         session=session,
         task_create=task_create,
     )
+
+    task_message = {
+        "id": str(task.id),
+        "title": str(task.title),
+        "description": str(task.description),
+        "priority": str(task.priority.value),
+        "created_at": task.created_at.isoformat() if task.created_at else "",
+    }
+
+    await rabbitmq_service.publish_task(task_message)
 
     return TaskRead.model_validate(task)
