@@ -51,6 +51,8 @@ class TaskUpdatePartial(BaseModel):
     status: TaskStatus = TaskStatus.NEW
     result: str | None = None
     error_info: str | None = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
 
 
 class TaskRead(TaskBase):
