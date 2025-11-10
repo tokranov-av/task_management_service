@@ -43,13 +43,19 @@ uv run python -m task_handler.main
 
 ## Тестирование
 
-1. Запустите сервис тестовой базы данных в директории `task_management_service`:
+1. Для тестирования необходимо установить dev зависимости:
+
+```shell
+uv sync --dev
+```
+
+2. Запустите сервис тестовой базы данных в директории `task_management_service`:
 
 ```shell
 docker compose -f docker-compose.test.yaml up
 ```
 
-2. Запустите тесты:
+3. Запустите тесты:
 
 ```shell
 uv run pytest -v
