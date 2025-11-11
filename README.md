@@ -23,8 +23,13 @@ cd management-service && cp env.template .env && cp config.default.yaml config.l
 ```shell
 docker compose up
 ```
+5. Выполните миграции в базу данных в директории `management-service`:
 
-5. Запустите API:
+```shell
+alembic upgrade head
+```
+
+6. Запустите API:
 
 В отдельном окне терминала в директории `management-service` выполните команду:
 
@@ -32,7 +37,7 @@ docker compose up
 uv run uvicorn main:app --reload
 ```
 
-5. Запустите обработчик сообщений (имитация сервиса, получающего данные из очереди сообщений и обрабатывающая задачи)
+7Запустите обработчик сообщений (имитация сервиса, получающего данные из очереди сообщений и обрабатывающая задачи)
 
 Команду необходимо запустить в отдельном окне терминала в директории `management-service`:
 
